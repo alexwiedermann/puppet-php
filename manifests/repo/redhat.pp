@@ -7,9 +7,12 @@
 #
 
 class php::repo::redhat (
-  $yum_repo = 'remi_php56',
+  $yum_repo = undef,
 ) {
-
+  if($yum_repo == undef) {
+    $yum_repo = 'remi_php56'
+  }
+  
   $releasever = $facts['os']['name'] ? {
     /(?i:Amazon)/ => '6',
     default       => '$releasever',  # Yum var
@@ -24,12 +27,32 @@ class php::repo::redhat (
     priority   => 1,
   }
 
-  yumrepo { 'remi-php56':
-    descr      => 'Remi\'s PHP 5.6 RPM repository for Enterprise Linux $releasever - $basearch',
-    mirrorlist => "https://rpms.remirepo.net/enterprise/${releasever}/php56/mirror",
-    enabled    => 1,
-    gpgcheck   => 1,
-    gpgkey     => 'https://rpms.remirepo.net/RPM-GPG-KEY-remi',
-    priority   => 1,
+  if ($yum_repo == 'remi_php70') {
+    yumrepo { 'remi-php70':
+      descr      => 'Remi\'s PHP 7.0 RPM repository for Enterprise Linux $releasever - $basearch',
+      mirrorlist => "https://rpms.remirepo.net/enterprise/${releasever}/php70/mirror",
+      enabled    => 1,
+      gpgcheck   => 1,
+      gpgkey     => 'https://rpms.remirepo.net/RPM-GPG-KEY-remi',
+      priority   => 1,
+    }
+  } elsif ($yum_repo == 'remi_php55') {
+    yumrepo { 'remi-php55':
+      descr      => 'Remi\'s PHP 5.5 RPM repository for Enterprise Linux $releasever - $basearch',
+      mirrorlist => "https://rpms.remirepo.net/enterprise/${releasever}/php55/mirror",
+      enabled    => 1,
+      gpgcheck   => 1,
+      gpgkey     => 'https://rpms.remirepo.net/RPM-GPG-KEY-remi',
+      priority   => 1,
+    }
+  } else {
+    yumrepo { 'remi-php56':
+      descr      => 'Remi\'s PHP 5.6 RPM repository for Enterprise Linux $releasever - $basearch',
+      mirrorlist => "https://rpms.remirepo.net/enterprise/${releasever}/php56/mirror",
+      enabled    => 1,
+      gpgcheck   => 1,
+      gpgkey     => 'https://rpms.remirepo.net/RPM-GPG-KEY-remi',
+      priority   => 1,
+    }
   }
 }
