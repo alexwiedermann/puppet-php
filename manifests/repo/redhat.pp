@@ -9,9 +9,6 @@
 class php::repo::redhat (
   $yum_repo = undef,
 ) {
-  if($yum_repo == undef) {
-    $yum_repo = 'remi_php56'
-  }
   
   $releasever = $facts['os']['name'] ? {
     /(?i:Amazon)/ => '6',
@@ -45,7 +42,7 @@ class php::repo::redhat (
       gpgkey     => 'https://rpms.remirepo.net/RPM-GPG-KEY-remi',
       priority   => 1,
     }
-  } else {
+  } elsif ($yum_repo == undef) {
     yumrepo { 'remi-php56':
       descr      => 'Remi\'s PHP 5.6 RPM repository for Enterprise Linux $releasever - $basearch',
       mirrorlist => "https://rpms.remirepo.net/enterprise/${releasever}/php56/mirror",
